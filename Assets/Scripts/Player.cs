@@ -8,7 +8,8 @@ public class Player : MonoBehaviour
     private Vector2 _dragStartPos;
     private Rigidbody _rigidbody;
 
-    private bool _isDragging;
+    private Vector3 _velocity = Vector3.one;
+
     // 움직이나?
     private bool _isMove;
     // 오른쪽인가?
@@ -25,12 +26,10 @@ public class Player : MonoBehaviour
     {
         if(Input.GetMouseButtonDown(0))
         {
-            _isDragging = true;
             _dragStartPos = Input.mousePosition;
         }
         if(Input.GetMouseButtonUp(0))
         {
-            _isDragging = false;
             Vector2 endPos = Input.mousePosition;
             float deltaX = endPos.x - _dragStartPos.x;
             float deltaY = endPos.y - _dragStartPos.y;
@@ -55,11 +54,12 @@ public class Player : MonoBehaviour
         {
             Debug.Log("Game Over");
         }
-        if(other.CompareTag("Coin"))
+        else if(other.CompareTag("Coin"))
         {
-            Debug.Log("Get Score");
-            GameManager.Scoring();
             Destroy(other.gameObject);
+            GameManager.Scoring();
+            Debug.Log("Get Score");
+            Debug.Log("Other Collider : " + other.name);
         }
     }
 
@@ -72,6 +72,6 @@ public class Player : MonoBehaviour
     {
         int flag = isRight ? 1 : -1;
         Vector3 dst = transform.position + new Vector3(flag * 3f, 0, 0);
-        transform.position = Vector3.Lerp(transform.position, dst, 10f);
+        transform.position = Vector3.SmoothDamp(transform.position, dst, ref _velocity, 0.5f);
     }
 }
