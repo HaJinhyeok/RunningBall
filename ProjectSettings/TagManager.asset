@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Box
   - Coin
+  - Road
   layers:
   - Default
   - TransparentFX
